@@ -1,0 +1,71 @@
+{
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-quality-gate.js\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-ts-typecheck.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-autoformat.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-console-log.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-build-analyzer.js\""
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-precompact.js\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/hook-pattern-extractor.js\""
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PROJECT=$(basename \"$PWD\") && osascript -e 'display notification \"'\"$CLAUDE_NOTIFICATION_MESSAGE\"'\" with title \"Claude Code — '\"$PROJECT\"'\"' && afplay /System/Library/Sounds/Hero.aiff && say -v Samantha \"Claude work on $PROJECT is done\""
+          }
+        ]
+      }
+    ]
+  }
+}
