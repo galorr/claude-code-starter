@@ -1,0 +1,26 @@
+# Secrets - never commit these
+.credentials.json
+settings.local.json
+.mcp.json
+
+# Session data
+history.jsonl
+projects/
+session-env/
+debug/
+file-history/
+paste-cache/
+image-cache/
+shell-snapshots/
+plans/
+ide/
+cache/
+memory-bank/
+statsig/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
