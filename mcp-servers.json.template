@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "--userconfig", "/dev/null", "--registry", "https://registry.npmjs.org", "@piotr-agier/google-drive-mcp"],
+      "env": {
+        "GOOGLE_DRIVE_OAUTH_CREDENTIALS": "__GOOGLE_DRIVE_OAUTH_CREDENTIALS_PATH__"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "--userconfig", "/dev/null", "--registry", "https://registry.npmjs.org", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "__YOUR_GITHUB_PAT__"
+      }
+    },
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "--userconfig", "/dev/null", "--registry", "https://registry.npmjs.org", "mcp-atlassian"],
+      "env": {
+        "ATLASSIAN_BASE_URL": "__YOUR_ATLASSIAN_BASE_URL__",
+        "ATLASSIAN_EMAIL": "__YOUR_EMAIL__",
+        "ATLASSIAN_API_TOKEN": "__YOUR_ATLASSIAN_API_TOKEN__"
+      }
+    }
+  }
+}
