@@ -67,7 +67,7 @@ The `/go` (aka `/go-devloop`) skill is the primary way to implement Jira tickets
 
 ## What's Included
 
-### Skills (14)
+### Skills (21)
 Custom skills invoked via `/skill-name` in Claude Code:
 
 | Skill | Description |
@@ -86,8 +86,16 @@ Custom skills invoked via `/skill-name` in Claude Code:
 | `prompt-engineer` | LLM prompt optimization |
 | `n8n-builder` | n8n workflow automation |
 | `feature-composer` | Feature composition orchestrator |
+| `claudia-debugger` | Debug investigator for hard production bugs |
+| `knowledge-transfer` | Generate browsable codebase documentation |
+| `career-scout` | Career intelligence and interview prep |
+| `cp-be` | Shortcut for codepilot-be |
+| `cp-ui` | Shortcut for codepilot-ui |
+| `go` | Shortcut for go-devloop |
+| `kt` | Shortcut for knowledge-transfer |
+| `tc` | Shortcut for trycycle |
 
-### Slash Commands (15)
+### Slash Commands (16)
 
 | Command | Description |
 |---------|-------------|
@@ -101,6 +109,7 @@ Custom skills invoked via `/skill-name` in Claude Code:
 | `/verify` | Run comprehensive verification |
 | `/checkpoint` | Save progress checkpoint |
 | `/learn` | Extract reusable patterns from session |
+| `/claudia` | Debug investigation for hard bugs |
 
 ### Agents (8)
 Specialized sub-agents for parallel task execution — planners, reviewers, debuggers, TDD guides, etc.

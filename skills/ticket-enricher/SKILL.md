@@ -82,8 +82,8 @@ Processed: X tickets
 Skipped: Y tickets (reason)
 
 Ticket links:
-- GRW-123: HLD added
-- GRW-124: HLD added
+- PROJ-123: HLD added
+- PROJ-124: HLD added
 ...
 
 All tickets in Epic {epicKey} now enriched with architectural HLDs.
