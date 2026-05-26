@@ -25,8 +25,8 @@ When the user asks to install or set up their Claude Code environment using this
 
 | Component | Count | Location |
 |-----------|-------|----------|
-| Slash commands | 15 | `~/.claude/commands/` |
-| Skills | 14 | `~/.claude/skills/` |
+| Slash commands | 16 | `~/.claude/commands/` |
+| Skills | 21 | `~/.claude/skills/` |
 | Agents | 8 | `~/.claude/agents/` |
 | Hooks | 7 | `~/.claude/hooks/` |
 | Settings | 1 | `~/.claude/settings.json` |
@@ -40,6 +40,8 @@ After setup, tell the user about these commonly used commands:
 - `/code-review` — Review uncommitted changes
 - `/tdd` — Test-driven development
 - `/build-fix` — Fix build/TypeScript errors
+- `/claudia` — Debug investigation for hard bugs
+- `/kt` — Generate knowledge-transfer documentation
 
 ## Running trycycle (IMPORTANT)
 

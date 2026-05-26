@@ -13,7 +13,7 @@ Transforms a PRD + prototype + empty Jira epic into a fully ticketed implementat
 ## Required Inputs
 - `prdLink` — Google Docs PRD URL
 - `prototypeUrl` — Preview/prototype URL
-- `epicKey` — Empty Jira epic key (e.g. `GRW-12345`)
+- `epicKey` — Empty Jira epic key (e.g. `PROJ-12345`)
 
 **If any input is missing → stop and request it before proceeding.**
 
