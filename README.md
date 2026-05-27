@@ -67,8 +67,10 @@ The `/go` (aka `/go-devloop`) skill is the primary way to implement Jira tickets
 
 ## What's Included
 
-### Skills (21)
+### Skills (23)
 Custom skills invoked via `/skill-name` in Claude Code:
+
+#### Development Skills (21)
 
 | Skill | Description |
 |-------|-------------|
@@ -94,6 +96,15 @@ Custom skills invoked via `/skill-name` in Claude Code:
 | `go` | Shortcut for go-devloop |
 | `kt` | Shortcut for knowledge-transfer |
 | `tc` | Shortcut for trycycle |
+
+#### Co-worker Skills (2)
+
+Personal productivity skills designed for daily/weekly automation. Friends can fork, run `/job-scanner-setup`, and get their own personalized instance.
+
+| Skill | Description |
+|-------|-------------|
+| `job-scanner` | Daily personalized job-market scanner — searches LinkedIn, Glassdoor, VC portfolio boards, remote boards, and a custom watchlist; dedupes against prior runs; verifies every apply link; posts a ranked digest to Slack. Designed for Cowork scheduled tasks. |
+| `job-scanner-setup` | Interactive one-time setup for `job-scanner` — reads your CV, asks 5–7 questions, generates a personalized SKILL.md, and optionally registers the daily scheduled task. |
 
 ### Slash Commands (16)
 
@@ -126,6 +137,16 @@ Automated quality gates that run during Claude Code sessions:
 | `hook-build-analyzer.js` | PostToolUse | Analyze build output |
 | `hook-precompact.js` | PreCompact | Save context before compaction |
 | `hook-pattern-extractor.js` | Stop | Extract patterns at session end |
+
+### Scheduled Tasks
+
+Some skills are designed to run automatically on a daily/weekly cron rather than ad-hoc. Scheduling is a [Cowork](https://claude.com) feature (not Claude Code CLI), but the SKILL.md format is identical — install from this repo and register the schedule via Cowork's `/schedule` skill.
+
+| Skill | Suggested schedule | What it does |
+|-------|--------------------|--------------|
+| `job-scanner` | Daily at 08:00 | Posts a ranked list of NEW openings matching your target role to a Slack channel. See `skills/job-scanner/README.md` for setup. |
+
+To install + schedule in one go: `/job-scanner-setup`
 
 ### MCP Servers
 Pre-configured templates for stdio servers (saved to `~/.claude/.mcp.json`):
