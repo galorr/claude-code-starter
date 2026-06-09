@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-atlas-local:latest
+    container_name: zi-growth-mongodb
+    hostname: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: user
+      MONGODB_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d:ro
+      - mongodb_data:/data/db
+      - mongodb_configdb:/data/configdb
+      - mongodb_mongot:/data/mongot
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh "mongodb://user:password@localhost:27017/?authSource=admin&directConnection=true" --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_configdb:
+    driver: local
+  mongodb_mongot:
+    driver: local

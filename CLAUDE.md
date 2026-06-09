@@ -106,6 +106,24 @@ git pull --recurse-submodules
 ./install.sh
 ```
 
+## Local Agents MCP (`local-agents`)
+
+If the `local-agents` MCP server is available (registered in `~/.claude.json`), use its tools proactively instead of burning the main context window on file exploration:
+
+| Situation | Tool to reach for |
+|-----------|-----------------|
+| "How does X work in this codebase?" | `explore_lite(task, repo)` — fast, no memory needed |
+| Deep investigation spanning many files | `explore(task, repo)` — uses shared memory, resumable |
+| Recurring Q&A about a repo | `codebase_qa(question, repo)` — cited answers, auto-saved to memory |
+| Any git/GitHub task in plain English | `git_yoda(task, repo)` — dry-run by default |
+| Writing a PR description | `pr_desc(repo)` — generates What/Why/How to Test/Risks |
+| Saving a decision for future sessions | `memory_remember(text, namespace)` |
+| Recalling prior work | `memory_recall(query, namespace)` |
+| Ending a long session | `save_handover(note, repo, session)` |
+| Starting a new session on prior work | `explore(task, repo, resume=true)` |
+
+**All tools are optional** — if the server is not running or memory is unavailable, fall back to normal file tools. Never fail a task just because `local-agents` is unreachable.
+
 ## Important
 
 - NEVER commit secrets (API tokens, credentials) to this repo

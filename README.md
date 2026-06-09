@@ -157,6 +157,62 @@ Pre-configured templates for stdio servers (saved to `~/.claude/.mcp.json`):
 HTTP servers added via `claude mcp add` (saved to `~/.claude.json`):
 - **BigQuery** — uses Google's hosted MCP (no credentials needed)
 
+### Local Agents MCP (optional — requires Docker + Ollama)
+
+A fully local, privacy-first MCP server powered by a local LLM (Ollama). No data leaves your machine.
+
+| Tool | What it does |
+|------|-------------|
+| `codebase_qa` | Ask any repo a question — get a cited answer from a local LLM |
+| `explore` | Deep repo exploration with shared vector memory across sessions |
+| `explore_lite` | Lightweight file exploration — no memory needed, instant |
+| `git_yoda` | Natural-language git/gh operations (dry-run by default) |
+| `pr_desc` | Generate a structured PR description (What/Why/How to Test/Risks) |
+| `save_handover` | Write a handover note so a fresh session can resume |
+| `latest_handover` | Retrieve the most recent handover for a project |
+| `memory_remember` | Store a durable note or decision in shared vector memory |
+| `memory_recall` | Semantic search over all stored memories |
+
+**Prerequisites:** Docker, Ollama (`ollama pull qwen3-coder:30b` + `ollama pull nomic-embed-text`), Python 3.11+
+
+The installer sets up a Python venv, starts MongoDB via Docker, and registers the MCP in both Claude Code and Claude Desktop. Memory is **optional** — all file tools work without MongoDB/Ollama.
+
+## Using the Local Agents MCP in Claude Code
+
+Two steps are needed: **registering** the server so Claude Code loads it, and **documenting** it so Claude knows when to use it.
+
+### Step 1 — Register the server
+
+Run `./install.sh` and answer **Y** to the local-agents question. It will:
+- Create a Python venv inside `local-agents/`
+- Start MongoDB via Docker
+- Patch `~/.claude.json` with the MCP entry (user-scoped — available in every project)
+- Pull the required Ollama models
+
+Then **restart Claude Code**.
+
+> **Project-scoped alternative:** If you only want the MCP in one repo, put the entry in a `.mcp.json` file at that repo's root — Claude Code reads it automatically without touching `~/.claude.json`.
+
+### Step 2 — Tell Claude when to use it (`CLAUDE.md`)
+
+Registering makes the tools *callable*, but Claude won't reach for them unprompted. The `CLAUDE.md` in this repo already contains a usage table that ships to `~/.claude/` on install:
+
+| Situation | Tool |
+|-----------|------|
+| "How does X work in this codebase?" | `explore_lite` — fast, no memory needed |
+| Deep investigation spanning many files | `explore` — uses shared memory, resumable |
+| Recurring Q&A about a repo | `codebase_qa` — cited answers, auto-saved to memory |
+| Any git/GitHub task in plain English | `git_yoda` — dry-run by default |
+| Writing a PR description | `pr_desc` — generates What/Why/How to Test/Risks |
+| Saving a decision for future sessions | `memory_remember` |
+| Recalling prior work | `memory_recall` |
+| Ending a long session | `save_handover` |
+| Resuming a prior session | `explore(resume=true)` |
+
+All tools degrade gracefully — if the server is not running or Ollama/MongoDB is unavailable, Claude falls back to normal file tools.
+
+---
+
 ## Gotcha: Trycycle and nested Claude Code sessions
 
 If you invoke `trycycle` (directly, via `/tc`, or through `/go` → `go-devloop`)

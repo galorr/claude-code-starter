@@ -24,3 +24,11 @@ Thumbs.db
 
 # Node
 node_modules/
+.claude-session-state.json
+
+# Local agents
+local-agents/.venv/
+local-agents/scripts/__pycache__/
+local-agents/mcp/__pycache__/
+**/__pycache__/
+*.pyc
