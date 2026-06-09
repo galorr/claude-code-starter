@@ -177,6 +177,42 @@ A fully local, privacy-first MCP server powered by a local LLM (Ollama). No data
 
 The installer sets up a Python venv, starts MongoDB via Docker, and registers the MCP in both Claude Code and Claude Desktop. Memory is **optional** — all file tools work without MongoDB/Ollama.
 
+## Using the Local Agents MCP in Claude Code
+
+Two steps are needed: **registering** the server so Claude Code loads it, and **documenting** it so Claude knows when to use it.
+
+### Step 1 — Register the server
+
+Run `./install.sh` and answer **Y** to the local-agents question. It will:
+- Create a Python venv inside `local-agents/`
+- Start MongoDB via Docker
+- Patch `~/.claude.json` with the MCP entry (user-scoped — available in every project)
+- Pull the required Ollama models
+
+Then **restart Claude Code**.
+
+> **Project-scoped alternative:** If you only want the MCP in one repo, put the entry in a `.mcp.json` file at that repo's root — Claude Code reads it automatically without touching `~/.claude.json`.
+
+### Step 2 — Tell Claude when to use it (`CLAUDE.md`)
+
+Registering makes the tools *callable*, but Claude won't reach for them unprompted. The `CLAUDE.md` in this repo already contains a usage table that ships to `~/.claude/` on install:
+
+| Situation | Tool |
+|-----------|------|
+| "How does X work in this codebase?" | `explore_lite` — fast, no memory needed |
+| Deep investigation spanning many files | `explore` — uses shared memory, resumable |
+| Recurring Q&A about a repo | `codebase_qa` — cited answers, auto-saved to memory |
+| Any git/GitHub task in plain English | `git_yoda` — dry-run by default |
+| Writing a PR description | `pr_desc` — generates What/Why/How to Test/Risks |
+| Saving a decision for future sessions | `memory_remember` |
+| Recalling prior work | `memory_recall` |
+| Ending a long session | `save_handover` |
+| Resuming a prior session | `explore(resume=true)` |
+
+All tools degrade gracefully — if the server is not running or Ollama/MongoDB is unavailable, Claude falls back to normal file tools.
+
+---
+
 ## Gotcha: Trycycle and nested Claude Code sessions
 
 If you invoke `trycycle` (directly, via `/tc`, or through `/go` → `go-devloop`)
