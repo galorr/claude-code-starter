@@ -16,7 +16,7 @@ Q&A for the same repo is recalled first — so repeated/related questions get
 faster, more consistent answers and institutional knowledge accumulates.
 
 Usage:
-  python codebase_qa.py "How is auth validated and where?" --repo ~/code/zi-growth
+  python codebase_qa.py "How is auth validated and where?" --repo ~/code/growth
   python codebase_qa.py "What env vars are required at startup?" --repo .
   python codebase_qa.py "Where are Mongo queries and which collections?" --repo . --no-memory
 

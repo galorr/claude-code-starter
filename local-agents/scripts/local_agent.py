@@ -18,18 +18,18 @@ can stash and retrieve context on its own.
 
 Usage:
   # explore + auto-recall relevant prior memory, namespaced by repo
-  python local_agent.py "trace the /api/users request lifecycle" --dir . --namespace zi-growth
+  python local_agent.py "trace the /api/users request lifecycle" --dir . --namespace growth
 
   # write a handover note for the current session and store it
   python local_agent.py --handover "finished auth refactor, tests green" \
-      --dir . --namespace zi-growth --session oauth-fix
+      --dir . --namespace growth --session oauth-fix
 
   # start a new session by loading the latest handover + relevant memory
   python local_agent.py "continue where we left off on auth" \
-      --dir . --namespace zi-growth --session oauth-fix --resume
+      --dir . --namespace growth --session oauth-fix --resume
 
   # just recall, no exploration
-  python local_agent.py --recall "how does auth validation work" --namespace zi-growth
+  python local_agent.py --recall "how does auth validation work" --namespace growth
 
 Memory is OPTIONAL. If MONGODB_URI is unset (or Atlas/Ollama-embeddings are
 unreachable), exploration still works; memory tools degrade to a clear notice.

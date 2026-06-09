@@ -14,7 +14,7 @@ Backend:
 Each memory is one document:
   {
     "_id": ObjectId,
-    "namespace": "zi-growth",        # usually the repo name; isolates projects
+    "namespace": "growth",        # usually the repo name; isolates projects
     "kind": "note" | "handover" | "qa" | "decision",
     "session": "2026-06-08-oauth",   # optional, groups a working session
     "agent": "local-agent",          # who wrote it
