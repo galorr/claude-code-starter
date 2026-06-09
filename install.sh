@@ -198,6 +198,123 @@ else
   info "Skipping MCP configuration. You can set it up later by running install.sh again."
 fi
 
+# ── Local Agents MCP (Ollama + MongoDB) ────
+
+echo ""
+echo "──────────────────────────────────────────"
+echo "  Local Agents MCP (optional)"
+echo "  Runs a local LLM (Ollama) to power:"
+echo "    codebase_qa  explore  explore_lite"
+echo "    git_yoda     pr_desc  memory"
+echo "──────────────────────────────────────────"
+echo ""
+echo -n "Set up local-agents MCP (requires Docker + Ollama)? [Y/n]: "
+read -r SETUP_LOCAL_AGENTS
+
+if [[ ! "$SETUP_LOCAL_AGENTS" =~ ^[Nn]$ ]]; then
+  LOCAL_AGENTS_DIR="$SCRIPT_DIR/local-agents"
+  VENV="$LOCAL_AGENTS_DIR/.venv"
+
+  # Python venv
+  if ! command -v python3 &>/dev/null; then
+    warn "python3 not found — skipping local-agents setup"
+  else
+    info "Creating Python venv at $VENV..."
+    python3 -m venv "$VENV"
+    "$VENV/bin/pip" install --quiet --upgrade pip
+    "$VENV/bin/pip" install --quiet "mcp[cli]" pymongo
+    ok "Python venv ready"
+
+    # MongoDB via Docker
+    if command -v docker &>/dev/null && (docker compose version &>/dev/null 2>&1 || docker-compose version &>/dev/null 2>&1); then
+      info "Starting MongoDB (docker compose)..."
+      COMPOSE_CMD="docker compose"
+      docker compose version &>/dev/null 2>&1 || COMPOSE_CMD="docker-compose"
+      (cd "$LOCAL_AGENTS_DIR" && $COMPOSE_CMD up -d)
+      ok "MongoDB started"
+      MONGO_URI="mongodb://user:password@127.0.0.1:27017/agent_memory?authSource=admin&directConnection=true"
+    else
+      warn "Docker not found — MongoDB not started. Memory features will be unavailable."
+      MONGO_URI=""
+    fi
+
+    # Patch Claude Code config (~/.claude.json)
+    info "Registering local-agents in Claude Code (~/.claude.json)..."
+    CLAUDE_JSON="$HOME/.claude.json"
+    [ -f "$CLAUDE_JSON" ] || python3 -c "import json; json.dump({}, open('$CLAUDE_JSON','w'))"
+    python3 - "$CLAUDE_JSON" "$VENV/bin/python3" "$LOCAL_AGENTS_DIR/mcp/server.py" "$MONGO_URI" <<'PYEOF'
+import json, sys
+cfg_file, venv_py, srv_py, mongo_uri = sys.argv[1:]
+with open(cfg_file) as f:
+    cfg = json.load(f)
+cfg.setdefault("mcpServers", {})
+entry = {"command": venv_py, "args": [srv_py], "env": {
+    "MEMORY_VECTOR_MODE": "bruteforce",
+    "MEMORY_EMBED_MODEL": "nomic-embed-text",
+    "MEMORY_EMBED_DIMS": "768",
+    "LOCAL_AGENT_MODEL": "qwen3-coder:30b",
+    "CODEBASE_QA_MODEL": "qwen3-coder:30b",
+    "GIT_YODA_MODEL": "qwen3-coder:30b",
+    "PR_DESC_MODEL": "qwen3-coder:30b",
+}}
+if mongo_uri:
+    entry["env"]["MONGODB_URI"] = mongo_uri
+cfg["mcpServers"]["local-agents"] = entry
+with open(cfg_file, "w") as f:
+    json.dump(cfg, f, indent=2)
+    f.write("\n")
+PYEOF
+    ok "Registered in ~/.claude.json"
+
+    # Patch Claude Desktop config
+    DESKTOP_CFG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
+    if [ -d "$HOME/Library/Application Support/Claude" ]; then
+      info "Registering local-agents in Claude Desktop..."
+      [ -f "$DESKTOP_CFG" ] || python3 -c "import json; json.dump({}, open('$DESKTOP_CFG','w'))"
+      python3 - "$DESKTOP_CFG" "$VENV/bin/python3" "$LOCAL_AGENTS_DIR/mcp/server.py" "$MONGO_URI" <<'PYEOF'
+import json, sys
+cfg_file, venv_py, srv_py, mongo_uri = sys.argv[1:]
+with open(cfg_file) as f:
+    cfg = json.load(f)
+cfg.setdefault("mcpServers", {})
+entry = {"command": venv_py, "args": [srv_py], "env": {
+    "MEMORY_VECTOR_MODE": "bruteforce",
+    "MEMORY_EMBED_MODEL": "nomic-embed-text",
+    "MEMORY_EMBED_DIMS": "768",
+    "LOCAL_AGENT_MODEL": "qwen3-coder:30b",
+    "CODEBASE_QA_MODEL": "qwen3-coder:30b",
+    "GIT_YODA_MODEL": "qwen3-coder:30b",
+    "PR_DESC_MODEL": "qwen3-coder:30b",
+}}
+if mongo_uri:
+    entry["env"]["MONGODB_URI"] = mongo_uri
+cfg["mcpServers"]["local-agents"] = entry
+with open(cfg_file, "w") as f:
+    json.dump(cfg, f, indent=2)
+    f.write("\n")
+PYEOF
+      ok "Registered in Claude Desktop"
+    fi
+
+    # Ollama models
+    if command -v ollama &>/dev/null && curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; then
+      info "Pulling Ollama models (this may take a while)..."
+      ollama pull nomic-embed-text && ok "nomic-embed-text ready"
+      ollama pull qwen3-coder:30b  && ok "qwen3-coder:30b ready"
+    else
+      warn "Ollama not running. After starting Ollama, run:"
+      warn "  ollama pull nomic-embed-text"
+      warn "  ollama pull qwen3-coder:30b"
+    fi
+
+    # git pr-desc alias
+    git config --global alias.pr-desc "!python3 $LOCAL_AGENTS_DIR/scripts/pr_desc.py"
+    ok "git pr-desc alias registered"
+  fi
+else
+  info "Skipping local-agents setup."
+fi
+
 # ── Verify installation ────────────────────
 
 echo ""
@@ -213,9 +330,15 @@ echo "  Hooks:     $(ls "$CLAUDE_DIR/hooks"/*.js 2>/dev/null | wc -l | tr -d ' '
 echo ""
 
 if [ -f "$CLAUDE_DIR/.mcp.json" ]; then
-  echo "  MCP Servers: configured"
+  echo "  MCP Servers (cloud): configured"
 else
-  echo "  MCP Servers: not configured (run install.sh again to set up)"
+  echo "  MCP Servers (cloud): not configured (run install.sh again to set up)"
+fi
+
+if [ -f "$HOME/.claude.json" ] && python3 -c "import json; d=json.load(open('$HOME/.claude.json')); exit(0 if 'local-agents' in d.get('mcpServers',{}) else 1)" 2>/dev/null; then
+  echo "  Local Agents MCP:    configured (codebase_qa, explore, git_yoda, pr_desc, memory)"
+else
+  echo "  Local Agents MCP:    not configured (run install.sh again to set up)"
 fi
 
 echo ""
@@ -226,4 +349,6 @@ echo "    /plan          - Plan before coding"
 echo "    /code-review   - Review uncommitted changes"
 echo "    /tdd           - Test-driven development"
 echo "    /build-fix     - Fix build errors"
+echo "    codebase_qa    - Ask any repo a question (via local-agents MCP)"
+echo "    git pr-desc    - Generate a PR description from your diff"
 echo ""
