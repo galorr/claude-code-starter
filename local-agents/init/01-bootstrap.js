@@ -1,16 +1,12 @@
 // Runs once on a fresh data volume via /docker-entrypoint-initdb.d.
 // To re-run: `docker compose down -v && ./scripts/mongo-setup.sh`
 
-const VECTOR_DB = 'zi-growth-vectors';   // <-- rename if you want a different vector-db name
+const VECTOR_DB = 'local-vectors';   // <-- rename if you want a different vector-db name
 const VECTOR_COLLECTION = 'embeddings';
 const EMBEDDING_DIMS = 1536;             // match your embedding model
 
 const DATABASES = [
-  'zi-growth-signup',
   VECTOR_DB,
-  'ce-users',
-  'zi-lite-signup',
-  'gtm-user-preferences',
 ];
 
 // MongoDB creates databases lazily on first write.
