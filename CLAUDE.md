@@ -25,8 +25,8 @@ When the user asks to install or set up their Claude Code environment using this
 
 | Component | Count | Location |
 |-----------|-------|----------|
-| Slash commands | 16 | `~/.claude/commands/` |
-| Skills | 23 | `~/.claude/skills/` |
+| Slash commands | 17 | `~/.claude/commands/` |
+| Skills | 28 | `~/.claude/skills/` |
 | Agents | 8 | `~/.claude/agents/` |
 | Hooks | 7 | `~/.claude/hooks/` |
 | Settings | 1 | `~/.claude/settings.json` |
