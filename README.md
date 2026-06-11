@@ -67,10 +67,10 @@ The `/go` (aka `/go-devloop`) skill is the primary way to implement Jira tickets
 
 ## What's Included
 
-### Skills (23)
+### Skills (24)
 Custom skills invoked via `/skill-name` in Claude Code:
 
-#### Development Skills (21)
+#### Development Skills (22)
 
 | Skill | Description |
 |-------|-------------|
@@ -94,6 +94,7 @@ Custom skills invoked via `/skill-name` in Claude Code:
 | `cp-be` | Shortcut for codepilot-be |
 | `cp-ui` | Shortcut for codepilot-ui |
 | `go` | Shortcut for go-devloop |
+| `ld-history` | Query LaunchDarkly flag change history and audit logs |
 | `kt` | Shortcut for knowledge-transfer |
 | `tc` | Shortcut for trycycle |
 
@@ -140,7 +141,26 @@ Automated quality gates that run during Claude Code sessions:
 
 ### Scheduled Tasks
 
-Some skills are designed to run automatically on a daily/weekly cron rather than ad-hoc. Scheduling is a [Cowork](https://claude.com) feature (not Claude Code CLI), but the SKILL.md format is identical — install from this repo and register the schedule via Cowork's `/schedule` skill.
+The `scheduled/` folder is a **drop-in kit** for portable scheduled tasks. Each task is two files:
+
+| File | Purpose |
+|------|---------|
+| `<task>.task.md` | Task definition: schedule (cron or one-time) + the full self-contained prompt |
+| `<task>.prompt.md` | A ready-to-paste message that tells Claude to register the task |
+
+**Included tasks:**
+
+| Task | Schedule | What it does |
+|------|----------|--------------|
+| `daily-standup` | Weekdays 09:00 | Summarizes your GitHub commits, PRs, and Jira activity into a standup update |
+
+**To register a task**, open Claude and paste:
+
+> Read `scheduled/daily-standup.task.md` and create the scheduled task it describes using the `scheduled-tasks` MCP (`create_scheduled_task`). Use the `taskId`, `schedule`, and `prompt` exactly as written.
+
+Templates (`TEMPLATE.task.md` / `TEMPLATE.prompt.md`) are included for creating your own tasks. See `scheduled/README.md` for full details.
+
+**Skill-based scheduled tasks** — some skills are also designed to run on a cron:
 
 | Skill | Suggested schedule | What it does |
 |-------|--------------------|--------------|

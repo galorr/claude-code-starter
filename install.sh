@@ -47,7 +47,7 @@ ok "Submodules ready"
 
 # ── Backup existing config ──────────────────
 
-COMPONENTS=(commands skills agents hooks settings.json .mcp.json)
+COMPONENTS=(commands skills agents hooks scheduled settings.json .mcp.json)
 HAS_EXISTING=false
 
 for item in "${COMPONENTS[@]}"; do
@@ -95,6 +95,11 @@ info "Installing hooks..."
 rm -rf "$CLAUDE_DIR/hooks"
 cp -R "$SCRIPT_DIR/hooks" "$CLAUDE_DIR/hooks"
 ok "Hooks installed ($(ls "$CLAUDE_DIR/hooks" | wc -l | tr -d ' ') hooks)"
+
+info "Installing scheduled tasks..."
+rm -rf "$CLAUDE_DIR/scheduled"
+cp -R "$SCRIPT_DIR/scheduled" "$CLAUDE_DIR/scheduled"
+ok "Scheduled tasks installed ($(ls "$CLAUDE_DIR/scheduled"/*.task.md 2>/dev/null | wc -l | tr -d ' ') tasks)"
 
 info "Installing settings.json..."
 if [ -f "$CLAUDE_DIR/settings.json" ]; then
@@ -327,6 +332,7 @@ echo "  Commands:  $(ls "$CLAUDE_DIR/commands"/*.md 2>/dev/null | wc -l | tr -d 
 echo "  Skills:    $(ls -d "$CLAUDE_DIR/skills"/*/ 2>/dev/null | wc -l | tr -d ' ') skills"
 echo "  Agents:    $(ls "$CLAUDE_DIR/agents"/*.md 2>/dev/null | wc -l | tr -d ' ') agents"
 echo "  Hooks:     $(ls "$CLAUDE_DIR/hooks"/*.js 2>/dev/null | wc -l | tr -d ' ') hooks"
+echo "  Scheduled: $(ls "$CLAUDE_DIR/scheduled"/*.task.md 2>/dev/null | wc -l | tr -d ' ') task definitions"
 echo ""
 
 if [ -f "$CLAUDE_DIR/.mcp.json" ]; then
