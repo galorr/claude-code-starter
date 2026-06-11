@@ -10,7 +10,7 @@ When the user asks to install or set up their Claude Code environment using this
    ```bash
    ./install.sh
    ```
-   This backs up existing config, copies all components (commands, skills, agents, hooks, settings) into `~/.claude/`, and runs `npm install`.
+   This backs up existing config, copies all components (commands, skills, agents, hooks, scheduled tasks, settings) into `~/.claude/`, and runs `npm install`.
 
 2. **MCP Server Configuration:**
    The install script will prompt for MCP secrets interactively. If the user needs help:
@@ -29,6 +29,7 @@ When the user asks to install or set up their Claude Code environment using this
 | Skills | 28 | `~/.claude/skills/` |
 | Agents | 8 | `~/.claude/agents/` |
 | Hooks | 7 | `~/.claude/hooks/` |
+| Scheduled tasks | 1 | `~/.claude/scheduled/` |
 | Settings | 1 | `~/.claude/settings.json` |
 | MCP servers | 4 (GitHub, Atlassian, Google Drive, BigQuery) | Stdio: `~/.claude/.mcp.json`, HTTP: `~/.claude.json` via `claude mcp add` |
 

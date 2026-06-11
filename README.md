@@ -67,10 +67,10 @@ The `/go` (aka `/go-devloop`) skill is the primary way to implement Jira tickets
 
 ## What's Included
 
-### Skills (23)
+### Skills (24)
 Custom skills invoked via `/skill-name` in Claude Code:
 
-#### Development Skills (21)
+#### Development Skills (22)
 
 | Skill | Description |
 |-------|-------------|
@@ -94,6 +94,7 @@ Custom skills invoked via `/skill-name` in Claude Code:
 | `cp-be` | Shortcut for codepilot-be |
 | `cp-ui` | Shortcut for codepilot-ui |
 | `go` | Shortcut for go-devloop |
+| `ld-history` | Query LaunchDarkly flag change history and audit logs |
 | `kt` | Shortcut for knowledge-transfer |
 | `tc` | Shortcut for trycycle |
 
@@ -106,7 +107,7 @@ Personal productivity skills designed for daily/weekly automation. Friends can f
 | `job-scanner` | Daily personalized job-market scanner — searches LinkedIn, Glassdoor, VC portfolio boards, remote boards, and a custom watchlist; dedupes against prior runs; verifies every apply link; posts a ranked digest to Slack. Designed for Cowork scheduled tasks. |
 | `job-scanner-setup` | Interactive one-time setup for `job-scanner` — reads your CV, asks 5–7 questions, generates a personalized SKILL.md, and optionally registers the daily scheduled task. |
 
-### Slash Commands (16)
+### Slash Commands (17 + 1 command group)
 
 | Command | Description |
 |---------|-------------|
@@ -121,6 +122,12 @@ Personal productivity skills designed for daily/weekly automation. Friends can f
 | `/checkpoint` | Save progress checkpoint |
 | `/learn` | Extract reusable patterns from session |
 | `/claudia` | Debug investigation for hard bugs |
+
+**Command groups** (nested under a prefix):
+
+| Command | Description |
+|---------|-------------|
+| `/git:prune-branches` | Delete local branches whose remote tracking branch is gone |
 
 ### Agents (8)
 Specialized sub-agents for parallel task execution — planners, reviewers, debuggers, TDD guides, etc.
@@ -140,7 +147,26 @@ Automated quality gates that run during Claude Code sessions:
 
 ### Scheduled Tasks
 
-Some skills are designed to run automatically on a daily/weekly cron rather than ad-hoc. Scheduling is a [Cowork](https://claude.com) feature (not Claude Code CLI), but the SKILL.md format is identical — install from this repo and register the schedule via Cowork's `/schedule` skill.
+The `scheduled/` folder is a **drop-in kit** for portable scheduled tasks. Each task is two files:
+
+| File | Purpose |
+|------|---------|
+| `<task>.task.md` | Task definition: schedule (cron or one-time) + the full self-contained prompt |
+| `<task>.prompt.md` | A ready-to-paste message that tells Claude to register the task |
+
+**Included tasks:**
+
+| Task | Schedule | What it does |
+|------|----------|--------------|
+| `daily-standup` | Weekdays 09:00 | Summarizes your GitHub commits, PRs, and Jira activity into a standup update |
+
+**To register a task**, open Claude and paste:
+
+> Read `scheduled/daily-standup.task.md` and create the scheduled task it describes using the `scheduled-tasks` MCP (`create_scheduled_task`). Use the `taskId`, `schedule`, and `prompt` exactly as written.
+
+Templates (`TEMPLATE.task.md` / `TEMPLATE.prompt.md`) are included for creating your own tasks. See `scheduled/README.md` for full details.
+
+**Skill-based scheduled tasks** — some skills are also designed to run on a cron:
 
 | Skill | Suggested schedule | What it does |
 |-------|--------------------|--------------|
