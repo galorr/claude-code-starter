@@ -107,7 +107,7 @@ Personal productivity skills designed for daily/weekly automation. Friends can f
 | `job-scanner` | Daily personalized job-market scanner — searches LinkedIn, Glassdoor, VC portfolio boards, remote boards, and a custom watchlist; dedupes against prior runs; verifies every apply link; posts a ranked digest to Slack. Designed for Cowork scheduled tasks. |
 | `job-scanner-setup` | Interactive one-time setup for `job-scanner` — reads your CV, asks 5–7 questions, generates a personalized SKILL.md, and optionally registers the daily scheduled task. |
 
-### Slash Commands (16)
+### Slash Commands (17 + 1 command group)
 
 | Command | Description |
 |---------|-------------|
@@ -122,6 +122,12 @@ Personal productivity skills designed for daily/weekly automation. Friends can f
 | `/checkpoint` | Save progress checkpoint |
 | `/learn` | Extract reusable patterns from session |
 | `/claudia` | Debug investigation for hard bugs |
+
+**Command groups** (nested under a prefix):
+
+| Command | Description |
+|---------|-------------|
+| `/git:prune-branches` | Delete local branches whose remote tracking branch is gone |
 
 ### Agents (8)
 Specialized sub-agents for parallel task execution — planners, reviewers, debuggers, TDD guides, etc.
