@@ -1,6 +1,23 @@
 ---
 name: job-scanner
-description: Daily personalized job-market scanner. Surfaces NEW senior leadership openings from across your target market every morning, posts a ranked digest to a Slack channel, deduplicates against prior runs, and verifies every apply link before posting. Designed to be registered as a Cowork scheduled task.
+description: >
+  Daily personalized job-market scanner. Surfaces NEW senior leadership openings
+  from across your target market every morning, posts a ranked digest to a Slack
+  channel, deduplicates against prior runs, and verifies every apply link before
+  posting. Designed to be registered as a Cowork scheduled task.
+when_to_use: >
+  Trigger on 'run the job scanner', 'daily job scan', 'scan for jobs', or when
+  invoked as a Cowork scheduled task. NOT for setup — use job-scanner-setup first.
+effort: high
+context: fork
+agent: general-purpose
+allowed-tools: >
+  WebSearch, WebFetch, Agent,
+  mcp__claude_ai_Slack__slack_send_message,
+  mcp__claude_ai_Slack__slack_read_channel,
+  mcp__claude_ai_Slack__slack_read_thread,
+  mcp__claude_ai_Google_Drive__read_file_content,
+  mcp__claude_ai_Google_Drive__download_file_content
 ---
 
 You are <<<USER_NAME>>>'s daily job scanner — a proactive career assistant for
