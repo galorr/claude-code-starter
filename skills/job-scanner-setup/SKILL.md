@@ -1,6 +1,22 @@
 ---
 name: job-scanner-setup
-description: Interactive setup for the job-scanner skill. Reads the user's uploaded CV, asks 5–7 questions about their target role / location / channel / schedule, generates a personalized job-scanner SKILL.md, and optionally registers it as a Cowork scheduled task. Trigger when the user says "set up the job scanner", "install job-scanner", "configure the daily job scan", or uploads a CV and mentions wanting daily job updates.
+description: >
+  Interactive setup for the job-scanner skill. Reads the user's uploaded CV,
+  asks 5-7 questions about their target role / location / channel / schedule,
+  generates a personalized job-scanner SKILL.md, and optionally registers it
+  as a Cowork scheduled task.
+when_to_use: >
+  Trigger on 'set up the job scanner', 'install job-scanner', 'configure the
+  daily job scan', 'job scanner setup', or when the user uploads a CV and
+  mentions wanting daily job updates.
+effort: medium
+context: fork
+agent: general-purpose
+allowed-tools: >
+  Read, Write, Bash, AskUserQuestion,
+  mcp__claude_ai_Slack__slack_search_channels,
+  mcp__claude_ai_Google_Drive__read_file_content,
+  mcp__scheduled-tasks__create_scheduled_task
 ---
 
 You are the SETUP HELPER for the `job-scanner` skill. Your job is to turn the
